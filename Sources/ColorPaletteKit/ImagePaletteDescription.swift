@@ -17,9 +17,9 @@ public final class ImagePaletteDescription {
     private let height: Int
     private let size: Int
     
-    private let redBufffer: FloatingPlanarPixelBuffer
-    private let greenBufffer: FloatingPlanarPixelBuffer
-    private let blueBufffer: FloatingPlanarPixelBuffer
+    private let redBuffer: FloatingPlanarPixelBuffer
+    private let greenBuffer: FloatingPlanarPixelBuffer
+    private let blueBuffer: FloatingPlanarPixelBuffer
     
     private let centroidIndicesDescriptor: BNNSNDArrayDescriptor
     
@@ -37,9 +37,9 @@ public final class ImagePaletteDescription {
         self.width = cgImage.width
         self.height = cgImage.height
         self.size = width * height
-        self.redBufffer = FloatingPlanarPixelBuffer(width: width, height: height)
-        self.greenBufffer = FloatingPlanarPixelBuffer(width: width, height: height)
-        self.blueBufffer = FloatingPlanarPixelBuffer(width: width, height: height)
+        self.redBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
+        self.greenBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
+        self.blueBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
 
         let rgbSources: [vImage.PixelBuffer<vImage.PlanarF>]
         do {
@@ -49,9 +49,9 @@ public final class ImagePaletteDescription {
             )
             rgbSources = interleaved.planarBuffers()
             
-            rgbSources[0].scale(destination: redBufffer.buffer)
-            rgbSources[1].scale(destination: greenBufffer.buffer)
-            rgbSources[2].scale(destination: blueBufffer.buffer)
+            rgbSources[0].scale(destination: redBuffer.buffer)
+            rgbSources[1].scale(destination: greenBuffer.buffer)
+            rgbSources[2].scale(destination: blueBuffer.buffer)
         } catch {
             print(error)
         }
@@ -107,9 +107,9 @@ public final class ImagePaletteDescription {
             
             centroids.append(
                 Centroid(
-                    red: redBufffer.storage[randomIndex],
-                    green: greenBufffer.storage[randomIndex],
-                    blue: blueBufffer.storage[randomIndex]
+                    red: redBuffer.storage[randomIndex],
+                    green: greenBuffer.storage[randomIndex],
+                    blue: blueBuffer.storage[randomIndex]
                 )
             )
         }
@@ -147,13 +147,13 @@ public final class ImagePaletteDescription {
             centroids[centroid.offset].pixelCount = indices.count
             
             if !indices.isEmpty {
-                let gatheredRed = vDSP.gather(redBufffer.storage,
+                let gatheredRed = vDSP.gather(redBuffer.storage,
                                               indices: indices)
                 
-                let gatheredGreen = vDSP.gather(greenBufffer.storage,
+                let gatheredGreen = vDSP.gather(greenBuffer.storage,
                                                 indices: indices)
                 
-                let gatheredBlue = vDSP.gather(blueBufffer.storage,
+                let gatheredBlue = vDSP.gather(blueBuffer.storage,
                                                indices: indices)
                 
                 let color: SIMD3<Float> = [
@@ -180,9 +180,9 @@ public final class ImagePaletteDescription {
     ) {
         for (i, centroid) in centroids.enumerated() {
             distanceSquared(
-                reds: redBufffer.storage.baseAddress!,
-                greens: greenBufffer.storage.baseAddress!,
-                blues: blueBufffer.storage.baseAddress!,
+                reds: redBuffer.storage.baseAddress!,
+                greens: greenBuffer.storage.baseAddress!,
+                blues: blueBuffer.storage.baseAddress!,
                 centroid: centroid.color,
                 size: size,
                 temporaryReds: temporaryReds,

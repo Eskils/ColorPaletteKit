@@ -12,6 +12,10 @@ let package = Package(
             name: "ColorPaletteKit",
             targets: ["ColorPaletteKit"]
         ),
+        .library(
+            name: "TestHelpers",
+            targets: ["TestHelpers"]
+        ),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -19,6 +23,7 @@ let package = Package(
         .target(
             name: "ColorPaletteKit"
         ),
+        .target(name: "TestHelpers"),
         .testTarget(
             name: "ColorPaletteKitTests",
             dependencies: ["ColorPaletteKit"]

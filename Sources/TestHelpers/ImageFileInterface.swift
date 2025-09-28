@@ -9,10 +9,11 @@ import Foundation
 import CoreGraphics
 import ImageIO
 
-struct ImageFileInterface {
+@available(macOS 13.0, *)
+public struct ImageFileInterface {
     private init() {}
     
-    static func image(atPath path: String) throws(ImageFileInterfaceError) -> CGImage {
+    public static func image(atPath path: String) throws(ImageFileInterfaceError) -> CGImage {
         let url = URL(fileURLWithPath: path)
         let data: Data
         do {
@@ -31,7 +32,7 @@ struct ImageFileInterface {
         return cgImage
     }
 
-    static func write(image: CGImage, toPath path: String) throws(ImageFileInterfaceError) {
+    public static func write(image: CGImage, toPath path: String) throws(ImageFileInterfaceError) {
         let data = NSMutableData()
         guard
             let imageDestination = CGImageDestinationCreateWithData(data as CFMutableData, "public.png" as CFString, 1, nil)
@@ -54,7 +55,7 @@ struct ImageFileInterface {
     }
 }
 
-enum ImageFileInterfaceError: Error {
+public enum ImageFileInterfaceError: Error {
     case cannotReadContentsOfFile(URL, Error)
     case cannotMakeDirectory(String, Error)
     case cannotMakeImageSource

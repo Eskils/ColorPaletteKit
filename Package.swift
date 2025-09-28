@@ -26,7 +26,11 @@ let package = Package(
         .target(name: "TestHelpers"),
         .testTarget(
             name: "ColorPaletteKitTests",
-            dependencies: ["ColorPaletteKit"]
+            dependencies: ["ColorPaletteKit", "TestHelpers"]
+        ),
+        .testTarget(
+            name: "ColorPaletteKitPerformanceTests",
+            dependencies: ["ColorPaletteKit", "TestHelpers"]
         ),
     ]
 )

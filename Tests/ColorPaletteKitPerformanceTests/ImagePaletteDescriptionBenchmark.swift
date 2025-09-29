@@ -1,5 +1,5 @@
 //
-//  ImagePaletteDescriptionBenchmark.swift
+//  KMeansImagePaletteComputerBenchmark.swift
 //  ColorPaletteKit
 //
 //  Created by Eskil Gjerde Sviggum on 28/09/2025.
@@ -10,7 +10,7 @@ import Testing
 import ColorPaletteKit
 import TestHelpers
 
-struct ImagePaletteDescriptionBenchmark {
+struct KMeansImagePaletteComputerBenchmark {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
     
     func filePath(name: String, directory: String) -> String {
@@ -21,7 +21,7 @@ struct ImagePaletteDescriptionBenchmark {
     func durationOfInitialization() throws {
         let sunset = try ImageFileInterface.image(atPath: filePath(name: "sunset.jpg", directory: "TestAssets"))
         let start = CFAbsoluteTimeGetCurrent()
-        _ = ImagePaletteDescription(cgImage: sunset)
+        _ = KMeansImagePaletteComputer(cgImage: sunset)
         let end = CFAbsoluteTimeGetCurrent()
         let runtime =  end - start
         print(runtime)
@@ -100,7 +100,7 @@ struct ImagePaletteDescriptionBenchmark {
         tolerance: Int = 10
     ) throws -> TimeInterval {
         let sunset = try ImageFileInterface.image(atPath: filePath(name: "sunset.jpg", directory: "TestAssets"))
-        let imagePaletteDescription = ImagePaletteDescription(cgImage: sunset)
+        let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: sunset)
         let start = CFAbsoluteTimeGetCurrent()
         _ = imagePaletteDescription.dominantColors(
             amount: amountOfColors,

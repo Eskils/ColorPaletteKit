@@ -1,5 +1,5 @@
 //
-//  ImagePaletteDescriptionTests.swift
+//  KMeansImagePaletteComputerTests.swift
 //  ColorPaletteKit
 //
 //  Created by Eskil Gjerde Sviggum on 28/09/2025.
@@ -13,7 +13,7 @@ import simd
 import Accelerate
 import TestHelpers
 
-struct ImagePaletteDescriptionTests {
+struct KMeansImagePaletteComputerTests {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
     
     func filePath(name: String, directory: String) -> String {
@@ -36,7 +36,7 @@ struct ImagePaletteDescriptionTests {
         ]
         
         let leaf = try ImageFileInterface.image(atPath: filePath(name: "leaf.jpg", directory: "TestAssets"))
-        let imagePaletteDescription = ImagePaletteDescription(cgImage: leaf)
+        let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: leaf)
         let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
         
         #expect(
@@ -58,7 +58,7 @@ struct ImagePaletteDescriptionTests {
         ]
         
         let mountains = try ImageFileInterface.image(atPath: filePath(name: "mountains.jpg", directory: "TestAssets"))
-        let imagePaletteDescription = ImagePaletteDescription(cgImage: mountains)
+        let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: mountains)
         let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
         
         #expect(
@@ -80,7 +80,7 @@ struct ImagePaletteDescriptionTests {
         ]
         
         let sunset = try ImageFileInterface.image(atPath: filePath(name: "sunset.jpg", directory: "TestAssets"))
-        let imagePaletteDescription = ImagePaletteDescription(cgImage: sunset)
+        let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: sunset)
         let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
         
         #expect(

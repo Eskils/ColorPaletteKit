@@ -9,9 +9,9 @@ import CoreGraphics
 import Accelerate
 
 @available(macOS 13.0, iOS 16.0, *)
-public final class ImagePaletteDescription {
+public final class KMeansImagePaletteComputer: ImagePaletteComputer {
     private let cgImage: CGImage
-    private var imageFormat: vImage_CGImageFormat
+    private let imageFormat: vImage_CGImageFormat
     
     private let width: Int
     private let height: Int
@@ -22,11 +22,12 @@ public final class ImagePaletteDescription {
     private let blueBuffer: FloatingPlanarPixelBuffer
     
     private let centroidIndicesDescriptor: BNNSNDArrayDescriptor
+    private var defaultParameters: ImagePaletteComputationMethod.KMeans = .init()
     
     public init(cgImage: CGImage) {
         self.cgImage = cgImage
         // FIXME: Handle other color spaces + invalid format without force unwrap
-        self.imageFormat = vImage_CGImageFormat(
+        var imageFormat = vImage_CGImageFormat(
             bitsPerComponent: 32,
             bitsPerPixel: 32 * 3,
             colorSpace: CGColorSpaceCreateDeviceRGB(),
@@ -55,10 +56,24 @@ public final class ImagePaletteDescription {
         } catch {
             print(error)
         }
+        self.imageFormat = imageFormat
         
         centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
             scalarType: Int32.self,
             shape: .matrixRowMajor(size, 1))
+    }
+    
+    public convenience init(cgImage: CGImage, parameters: ImagePaletteComputationMethod.KMeans) {
+        self.init(cgImage: cgImage)
+        self.defaultParameters = parameters
+    }
+    
+    public func dominantColors(amount: Int) -> [SIMD3<Float>] {
+        dominantColors(
+            amount: amount,
+            maximumIterations: defaultParameters.maximumIterations,
+            tolerance: defaultParameters.tolerance
+        )
     }
     
     public func dominantColors(
@@ -244,7 +259,7 @@ public final class ImagePaletteDescription {
 }
 
 @available(macOS 13.0, iOS 16.0, *)
-extension ImagePaletteDescription {
+extension KMeansImagePaletteComputer {
     struct Centroid {
         var color: SIMD3<Float>
         var pixelCount = 0
@@ -252,7 +267,7 @@ extension ImagePaletteDescription {
 }
 
 @available(macOS 13.0, iOS 16.0, *)
-extension ImagePaletteDescription.Centroid {
+extension KMeansImagePaletteComputer.Centroid {
     init(red: Float, green: Float, blue: Float) {
         self.init(color: [red, green, blue])
     }

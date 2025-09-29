@@ -1,5 +1,5 @@
 //
-//  ImagePaletteDescription.swift
+//  KMeansImagePaletteComputer.swift
 //  ColorPaletteKit
 //
 //  Created by Eskil Gjerde Sviggum on 27/09/2025.

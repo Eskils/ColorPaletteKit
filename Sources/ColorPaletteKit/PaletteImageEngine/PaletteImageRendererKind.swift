@@ -24,3 +24,13 @@ extension PaletteImageRendererKind {
     }
 }
 
+extension PaletteImageRendererKind {
+    func renderer() -> any PaletteImageRenderer {
+        switch self {
+        case .spectrum:
+            SpectrumPaletteImageRenderer()
+        case .grid(let grid):
+            GridPaletteImageRenderer(maxColumns: grid.maxColumns)
+        }
+    }
+}

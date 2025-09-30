@@ -11,12 +11,12 @@ public enum PaletteImageRendererKind: Sendable {
 }
 
 extension PaletteImageRendererKind {
-    static let grid = PaletteImageRendererKind.grid(Grid())
+    public static let grid = PaletteImageRendererKind.grid(Grid())
 }
 
 extension PaletteImageRendererKind {
     public struct Grid: Sendable {
-        var maxColumns: Int
+        public var maxColumns: Int
         
         public init(maxColumns: Int = 6) {
             self.maxColumns = maxColumns

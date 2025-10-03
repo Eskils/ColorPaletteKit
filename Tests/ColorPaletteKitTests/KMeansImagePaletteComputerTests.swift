@@ -13,11 +13,15 @@ import simd
 import Accelerate
 import TestHelpers
 
+private let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL
+
 struct KMeansImagePaletteComputerTests {
-    let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
+    let snapshot = TestSnapshotContext(testsDirectory: testsDirectory)
+    let paletteImageEngine = PaletteImageEngine(kind: .grid)
+    let paletteImageSize = CGSize(width: 40, height: 40)
     
     func filePath(name: String, directory: String) -> String {
-        "\(testsDirectory)/\(directory)/\(name)"
+        "\(testsDirectory.path)/\(directory)/\(name)"
     }
     
     func sort(colors: [SIMD3<Float>]) -> [SIMD3<Float>] {
@@ -90,6 +94,36 @@ struct KMeansImagePaletteComputerTests {
                 threshold: 0.1
             )
         )
+    }
+    
+    @Test
+    func fewDominantColorsInLeafSnapshot() async throws {
+        try await snapshot.assertSnapshot(name: "k-means-leaf-4-colors") {
+            let leaf = try ImageFileInterface.image(atPath: filePath(name: "leaf.jpg", directory: "TestAssets"))
+            let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: leaf)
+            let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
+            return try paletteImageEngine.render(colors: colors, size: paletteImageSize)
+        }
+    }
+    
+    @Test
+    func fewDominantColorsInMountainsSnapshot() async throws {
+        try await snapshot.assertSnapshot(name: "k-means-mountains-4-colors") {
+            let leaf = try ImageFileInterface.image(atPath: filePath(name: "mountains.jpg", directory: "TestAssets"))
+            let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: leaf)
+            let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
+            return try paletteImageEngine.render(colors: colors, size: paletteImageSize)
+        }
+    }
+    
+    @Test
+    func fewDominantColorsInSunsetSnapshot() async throws {
+        try await snapshot.assertSnapshot(name: "k-means-sunset-4-colors") {
+            let leaf = try ImageFileInterface.image(atPath: filePath(name: "sunset.jpg", directory: "TestAssets"))
+            let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: leaf)
+            let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
+            return try paletteImageEngine.render(colors: colors, size: paletteImageSize)
+        }
     }
     
     private func isWithinAcceptedThreshold(colors: [SIMD3<Float>], expectedColors: [SIMD3<Float>], threshold: Float) -> Bool {

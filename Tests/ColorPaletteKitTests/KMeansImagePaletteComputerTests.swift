@@ -40,7 +40,7 @@ struct KMeansImagePaletteComputerTests {
         ]
         
         let leaf = try ImageFileInterface.image(atPath: filePath(name: "leaf.jpg", directory: "TestAssets"))
-        let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: leaf)
+        let imagePaletteDescription = try KMeansImagePaletteComputer(cgImage: leaf)
         let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
         
         #expect(
@@ -62,7 +62,7 @@ struct KMeansImagePaletteComputerTests {
         ]
         
         let mountains = try ImageFileInterface.image(atPath: filePath(name: "mountains.jpg", directory: "TestAssets"))
-        let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: mountains)
+        let imagePaletteDescription = try KMeansImagePaletteComputer(cgImage: mountains)
         let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
         
         #expect(
@@ -84,7 +84,7 @@ struct KMeansImagePaletteComputerTests {
         ]
         
         let sunset = try ImageFileInterface.image(atPath: filePath(name: "sunset.jpg", directory: "TestAssets"))
-        let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: sunset)
+        let imagePaletteDescription = try KMeansImagePaletteComputer(cgImage: sunset)
         let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
         
         #expect(
@@ -100,7 +100,7 @@ struct KMeansImagePaletteComputerTests {
     func fewDominantColorsInLeafSnapshot() async throws {
         try await snapshot.assertSnapshot(name: "k-means-leaf-4-colors") {
             let leaf = try ImageFileInterface.image(atPath: filePath(name: "leaf.jpg", directory: "TestAssets"))
-            let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: leaf)
+            let imagePaletteDescription = try KMeansImagePaletteComputer(cgImage: leaf)
             let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
             return try paletteImageEngine.render(colors: colors, size: paletteImageSize)
         }
@@ -110,7 +110,7 @@ struct KMeansImagePaletteComputerTests {
     func fewDominantColorsInMountainsSnapshot() async throws {
         try await snapshot.assertSnapshot(name: "k-means-mountains-4-colors") {
             let leaf = try ImageFileInterface.image(atPath: filePath(name: "mountains.jpg", directory: "TestAssets"))
-            let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: leaf)
+            let imagePaletteDescription = try KMeansImagePaletteComputer(cgImage: leaf)
             let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
             return try paletteImageEngine.render(colors: colors, size: paletteImageSize)
         }
@@ -120,7 +120,7 @@ struct KMeansImagePaletteComputerTests {
     func fewDominantColorsInSunsetSnapshot() async throws {
         try await snapshot.assertSnapshot(name: "k-means-sunset-4-colors") {
             let leaf = try ImageFileInterface.image(atPath: filePath(name: "sunset.jpg", directory: "TestAssets"))
-            let imagePaletteDescription = KMeansImagePaletteComputer(cgImage: leaf)
+            let imagePaletteDescription = try KMeansImagePaletteComputer(cgImage: leaf)
             let colors = imagePaletteDescription.dominantColors(amount: 4, maximumIterations: 10, tolerance: 10)
             return try paletteImageEngine.render(colors: colors, size: paletteImageSize)
         }

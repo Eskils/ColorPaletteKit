@@ -14,7 +14,7 @@ public enum ImagePaletteComputationMethod {
 
 @available(macOS 13.0, iOS 16.0, *)
 extension ImagePaletteComputationMethod {
-    func computer(cgImage: CGImage) -> any ImagePaletteComputer {
+    func computer(cgImage: CGImage) throws(ImagePaletteComputationError) -> any ImagePaletteComputer {
         switch self {
         case .kMeans(let kMeans):
             KMeansImagePaletteComputer(cgImage: cgImage, parameters: kMeans)

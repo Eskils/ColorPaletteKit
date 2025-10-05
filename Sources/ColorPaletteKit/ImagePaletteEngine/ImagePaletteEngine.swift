@@ -11,8 +11,8 @@ import CoreGraphics
 public final class ImagePaletteEngine {
     private let paletteComputer: any ImagePaletteComputer
     
-    public init(cgImage: CGImage, method: ImagePaletteComputationMethod) {
-        self.paletteComputer = method.computer(cgImage: cgImage)
+    public init(cgImage: CGImage, method: ImagePaletteComputationMethod) throws(ImagePaletteComputationError) {
+        self.paletteComputer = try method.computer(cgImage: cgImage)
     }
     
     public func dominantColors(amount: Int) -> [SIMD3<Float>] {

@@ -24,17 +24,18 @@ public final class KMeansImagePaletteComputer: ImagePaletteComputer {
     private let centroidIndicesDescriptor: BNNSNDArrayDescriptor
     private var defaultParameters: ImagePaletteComputationMethod.KMeans = .init()
     
-    public init(cgImage: CGImage) {
+    public init(cgImage: CGImage) throws(ImagePaletteComputationError) {
         self.cgImage = cgImage
-        // FIXME: Handle other color spaces + invalid format without force unwrap
-        var imageFormat = vImage_CGImageFormat(
+        guard var imageFormat = vImage_CGImageFormat(
             bitsPerComponent: 32,
             bitsPerPixel: 32 * 3,
             colorSpace: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: CGBitmapInfo(
                 rawValue: kCGBitmapByteOrder32Host.rawValue |
                 CGBitmapInfo.floatComponents.rawValue |
-                CGImageAlphaInfo.none.rawValue))!
+                CGImageAlphaInfo.none.rawValue)) else {
+            throw .cannotMakeImageFormat
+        }
         self.width = cgImage.width
         self.height = cgImage.height
         self.size = width * height
@@ -54,7 +55,7 @@ public final class KMeansImagePaletteComputer: ImagePaletteComputer {
             rgbSources[1].scale(destination: greenBuffer.buffer)
             rgbSources[2].scale(destination: blueBuffer.buffer)
         } catch {
-            print(error)
+            throw .cannotExtractImageData
         }
         self.imageFormat = imageFormat
         
@@ -63,8 +64,8 @@ public final class KMeansImagePaletteComputer: ImagePaletteComputer {
             shape: .matrixRowMajor(size, 1))
     }
     
-    public convenience init(cgImage: CGImage, parameters: ImagePaletteComputationMethod.KMeans) {
-        self.init(cgImage: cgImage)
+    public convenience init(cgImage: CGImage, parameters: ImagePaletteComputationMethod.KMeans) throws(ImagePaletteComputationError) {
+        try self.init(cgImage: cgImage)
         self.defaultParameters = parameters
     }
     

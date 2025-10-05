@@ -10,6 +10,7 @@ import CoreGraphics
 @available(macOS 13.0, iOS 16.0, *)
 public enum ImagePaletteComputationMethod {
     case kMeans(KMeans)
+    case equallySpacedSamples
 }
 
 @available(macOS 13.0, iOS 16.0, *)
@@ -17,7 +18,9 @@ extension ImagePaletteComputationMethod {
     func computer(cgImage: CGImage) throws(ImagePaletteComputationError) -> any ImagePaletteComputer {
         switch self {
         case .kMeans(let kMeans):
-            KMeansImagePaletteComputer(cgImage: cgImage, parameters: kMeans)
+            try KMeansImagePaletteComputer(cgImage: cgImage, parameters: kMeans)
+        case .equallySpacedSamples:
+            try EquallySpacedSamplesPaletteComputer(cgImage: cgImage, parameters: ())
         }
     }
 }

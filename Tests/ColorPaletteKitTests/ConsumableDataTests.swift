@@ -39,6 +39,114 @@ struct ConsumableDataTests {
     }
     
     @Test
+    func readInt16ValueOfOne() throws {
+        let consumable = ConsumableData(bytes: [0, 1])
+        let int = consumable.readInt16(mode: .consume)
+        #expect(int == 1)
+        #expect(consumable.index == 2)
+    }
+    
+    @Test
+    func readTooShortInt16() throws {
+        let consumable = ConsumableData(bytes: [1])
+        let int = consumable.readInt16(mode: .consume)
+        #expect(int == 256)
+        #expect(consumable.index == 1)
+    }
+    
+    @Test
+    func readInt16ValueOf256() throws {
+        let consumable = ConsumableData(bytes: [1, 0])
+        let int = consumable.readInt16(mode: .read)
+        #expect(int == 256)
+        #expect(consumable.index == 0)
+    }
+    
+    @Test
+    func readInt32ValueOfOne() throws {
+        let consumable = ConsumableData(bytes: [0, 0, 0, 1])
+        let int = consumable.readInt32(mode: .consume)
+        #expect(int == 1)
+        #expect(consumable.index == 4)
+    }
+    
+    @Test
+    func readTooShortInt32() throws {
+        let consumable = ConsumableData(bytes: [0, 1])
+        let int = consumable.readInt32(mode: .consume)
+        #expect(int == 65536)
+        #expect(consumable.index == 2)
+    }
+    
+    @Test
+    func readInt32ValueOf256() throws {
+        let consumable = ConsumableData(bytes: [0, 0, 1, 0])
+        let int = consumable.readInt32(mode: .read)
+        #expect(int == 256)
+        #expect(consumable.index == 0)
+    }
+    
+    @Test
+    func readASCII() throws {
+        let consumable = ConsumableData(bytes: [65, 66, 67, 68])
+        let text = consumable.readASCII(of: 4, mode: .read)
+        #expect(text == "ABCD")
+        #expect(consumable.index == 0)
+    }
+    
+    @Test
+    func readTooShortASCII() throws {
+        let consumable = ConsumableData(bytes: [65, 66])
+        let text = consumable.readASCII(of: 4, mode: .consume)
+        #expect(text == "AB")
+        #expect(consumable.index == 2)
+    }
+    
+    @Test
+    func readNextByteReadMode() throws {
+        let consumable = ConsumableData(bytes: [0, 1, 2, 3])
+        let byte1 = consumable.readNextByte(mode: .read)
+        #expect(byte1 == 0)
+        #expect(consumable.index == 0)
+        
+        let byte2 = consumable.readNextByte(mode: .read)
+        #expect(byte2 == 0)
+    }
+    
+    @Test
+    func readNextByteConsumeMode() throws {
+        let consumable = ConsumableData(bytes: [0, 1, 2, 3])
+        let byte1 = consumable.readNextByte(mode: .consume)
+        #expect(byte1 == 0)
+        #expect(consumable.index == 1)
+        
+        let byte2 = consumable.readNextByte(mode: .read)
+        #expect(byte2 == 1)
+    }
+    
+    @Test
+    func readReadMode() throws {
+        let consumable = ConsumableData(bytes: [0, 1, 2, 3])
+        let byteSlice1 = consumable.read(mode: .read, bytes: 2)
+        #expect(byteSlice1 == [0, 1])
+        #expect(consumable.index == 0)
+        
+        let byte2 = consumable.readNextByte(mode: .read)
+        #expect(byte2 == 0)
+    }
+    
+    @Test
+    func readConsumeMode() throws {
+        let consumable = ConsumableData(bytes: [0, 1, 2, 3])
+        let byteSlice1 = consumable.read(mode: .consume, bytes: 2)
+        #expect(byteSlice1 == [0, 1])
+        #expect(consumable.index == 2)
+        
+        let byte2 = consumable.readNextByte(mode: .read)
+        #expect(byte2 == 2)
+    }
+    
+    @Test
     func consumeByte() throws {
         let bytes = (0..<4).map { i in UInt8(i) }
         let consumable = ConsumableData(bytes: bytes)

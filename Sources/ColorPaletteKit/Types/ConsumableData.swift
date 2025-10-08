@@ -53,6 +53,25 @@ class ConsumableData {
         return String(characters)
     }
     
+    func readUTF16(of length: Int, mode: ReadMode) -> String {
+        let bytes = read(mode: mode, bytes: 2 * length)
+        let readLength = bytes.count / 2
+        let characters = (0..<readLength).compactMap { i -> Character? in
+            let firstByte = bytes[2 * i]
+            let secondByte = bytes[2 * i + 1]
+            
+            let scalar = UInt16(firstByte) << 8
+                + UInt16(secondByte)
+            
+            guard let unicodeScalar = Unicode.Scalar(scalar) else {
+                return nil
+            }
+            
+            return Character(unicodeScalar)
+        }
+        return String(characters)
+    }
+    
     func read(mode: ReadMode, bytes numberOfBytes: Int) -> ArraySlice<UInt8> {
         switch mode {
         case .consume:

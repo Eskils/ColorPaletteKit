@@ -103,6 +103,30 @@ struct ConsumableDataTests {
     }
     
     @Test
+    func readUTF16() throws {
+        let consumable = ConsumableData(bytes: [00, 65, 00, 66, 00, 67, 00, 68])
+        let text = consumable.readUTF16(of: 4, mode: .read)
+        #expect(text == "ABCD")
+        #expect(consumable.index == 0)
+    }
+    
+    @Test
+    func readTooShortUTF16() throws {
+        let consumable = ConsumableData(bytes: [00, 65, 00, 66])
+        let text = consumable.readUTF16(of: 4, mode: .consume)
+        #expect(text == "AB")
+        #expect(consumable.index == 4)
+    }
+    
+    @Test
+    func readASCIIAsUTF16() throws {
+        let consumable = ConsumableData(bytes: [65, 66, 67, 68])
+        let text = consumable.readUTF16(of: 4, mode: .read)
+        #expect(text == "䅂䍄")
+        #expect(consumable.index == 0)
+    }
+    
+    @Test
     func readNextByteReadMode() throws {
         let consumable = ConsumableData(bytes: [0, 1, 2, 3])
         let byte1 = consumable.readNextByte(mode: .read)

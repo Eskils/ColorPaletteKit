@@ -63,6 +63,15 @@ struct ConsumableDataTests {
     }
     
     @Test
+    func readInt16ValueAtOffset() throws {
+        let consumable = ConsumableData(bytes: [0, 0, 1, 0])
+        consumable.skip(bytes: 2)
+        let int = consumable.readInt16(mode: .consume)
+        #expect(int == 256)
+        #expect(consumable.index == 4)
+    }
+    
+    @Test
     func readInt32ValueOfOne() throws {
         let consumable = ConsumableData(bytes: [0, 0, 0, 1])
         let int = consumable.readInt32(mode: .consume)

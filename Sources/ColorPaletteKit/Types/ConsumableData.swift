@@ -132,11 +132,13 @@ class ConsumableData {
     }
     
     private func byte(at index: Int, in bytes: ArraySlice<UInt8>, or trailing: UInt8) -> UInt8 {
-        guard bytes.indices.contains(index) else {
+        let offsetIndex = bytes.index(bytes.startIndex, offsetBy: index)
+        
+        guard bytes.indices.contains(offsetIndex) else {
             return trailing
         }
         
-        return bytes[index]
+        return bytes[offsetIndex]
     }
 }
 

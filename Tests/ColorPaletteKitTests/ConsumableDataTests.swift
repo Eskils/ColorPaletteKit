@@ -128,6 +128,15 @@ struct ConsumableDataTests {
     }
     
     @Test
+    func readUTF16AtOffset() throws {
+        let consumable = ConsumableData(bytes: [0, 0, 00, 65, 00, 66, 00, 67, 00, 68])
+        consumable.skip(bytes: 2)
+        let text = consumable.readUTF16(of: 4, mode: .read)
+        #expect(text == "ABCD")
+        #expect(consumable.index == 2)
+    }
+    
+    @Test
     func readASCIIAsUTF16() throws {
         let consumable = ConsumableData(bytes: [65, 66, 67, 68])
         let text = consumable.readUTF16(of: 4, mode: .read)

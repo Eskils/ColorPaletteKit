@@ -57,8 +57,8 @@ class ConsumableData {
         let bytes = read(mode: mode, bytes: 2 * length)
         let readLength = bytes.count / 2
         let characters = (0..<readLength).compactMap { i -> Character? in
-            let firstByte = bytes[2 * i]
-            let secondByte = bytes[2 * i + 1]
+            let firstByte = bytes[bytes.index(bytes.startIndex, offsetBy: 2 * i)]
+            let secondByte = bytes[bytes.index(bytes.startIndex, offsetBy: 2 * i + 1)]
             
             let scalar = UInt16(firstByte) << 8
                 + UInt16(secondByte)

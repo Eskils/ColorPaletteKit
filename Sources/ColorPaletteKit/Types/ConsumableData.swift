@@ -19,6 +19,10 @@ class ConsumableData {
         bytes.isEmpty
     }
     
+    var isAtEnd: Bool {
+        index >= bytes.count
+    }
+    
     init(bytes: [UInt8]) {
         self.bytes = bytes
     }

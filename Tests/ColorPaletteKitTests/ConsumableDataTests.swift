@@ -39,6 +39,20 @@ struct ConsumableDataTests {
     }
     
     @Test
+    func isAtEnd() throws {
+        let expectedCount = Int.random(in: 4..<20)
+        let bytes = [UInt8](repeating: 0, count: expectedCount)
+        let consumable = ConsumableData(bytes: bytes)
+        #expect(!consumable.isAtEnd)
+        consumable.skip(bytes: expectedCount - 1)
+        #expect(!consumable.isAtEnd)
+        consumable.skipByte()
+        #expect(consumable.isAtEnd)
+        consumable.skipByte()
+        #expect(consumable.isAtEnd)
+    }
+    
+    @Test
     func readInt16ValueOfOne() throws {
         let consumable = ConsumableData(bytes: [0, 1])
         let int = consumable.readInt16(mode: .consume)

@@ -6,7 +6,7 @@
 //
 
 
-public enum ColorSwatchDecoderError: Error {
+public enum ColorSwatchDecoderError: Error, Equatable {
     case invalidFormat(received: String, expected: String)
     case unsupportedVersion(major: Int, minor: Int)
     case invalidBlockType(typeIdentifier: UInt16)

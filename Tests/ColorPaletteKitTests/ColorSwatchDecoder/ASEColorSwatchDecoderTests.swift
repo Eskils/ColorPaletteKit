@@ -120,4 +120,83 @@ struct ASEColorSwatchDecoderTests {
         
         #expect(blocks == expectedPalette)
     }
+    
+    @Test
+    func decodePaletteWithInvalidFormatInHeader() throws {
+        let bytes: [UInt8] = [65, 66, 67, 68]
+        let data = Data(bytes)
+        let decoder = ASEColorSwatchDecoder()
+        #expect(throws: ColorSwatchDecoderError.invalidFormat(received: "ABCD", expected: "ASEF")) {
+            try decoder.decode(from: data)
+        }
+    }
+    
+    @Test
+    func decodePaletteWithUnsupportedVersion() throws {
+        let bytes: [UInt8] = [65, 83, 69, 70, 0, 0, 0, 0]
+        let data = Data(bytes)
+        let decoder = ASEColorSwatchDecoder()
+        #expect(throws: ColorSwatchDecoderError.unsupportedVersion(major: 0, minor: 0)) {
+            try decoder.decode(from: data)
+        }
+    }
+    
+    @Test
+    func decodePaletteWithEmptyBlocks() throws {
+        let bytes: [UInt8] = [65, 83, 69, 70, 0, 1, 0, 0]
+        let data = Data(bytes)
+        let decoder = ASEColorSwatchDecoder()
+        #expect(try decoder.decode(from: data).isEmpty)
+    }
+    
+    @Test
+    func decodePaletteWithUnsupportedBlockType() throws {
+        let bytes: [UInt8] = [
+            65, 83, 69, 70,
+            0, 1, 0, 0,
+            0, 0, 0, 1,
+            0, 2
+        ]
+        let data = Data(bytes)
+        let decoder = ASEColorSwatchDecoder()
+        #expect(throws: ColorSwatchDecoderError.invalidBlockType(typeIdentifier: 2)) {
+            try decoder.decode(from: data)
+        }
+    }
+    
+    @Test
+    func decodePaletteWithUnsupportedColorModel() throws {
+        let bytes: [UInt8] = [
+            65, 83, 69, 70,
+            0, 1, 0, 0,
+            0, 0, 0, 1,
+            0, 1, 0, 0, 0, 0, 0, 0,
+            65, 66, 67, 32
+        ]
+        let data = Data(bytes)
+        let decoder = ASEColorSwatchDecoder()
+        #expect(throws: ColorSwatchDecoderError.invalidColorModel(identifier: "ABC ")) {
+            try decoder.decode(from: data)
+        }
+    }
+    
+    @Test
+    func decodePaletteWithUnsupportedColorType() throws {
+        let bytes: [UInt8] = [
+            65, 83, 69, 70,
+            0, 1, 0, 0,
+            0, 0, 0, 1,
+            0, 1, 0, 0, 0, 0, 0, 0,
+            82, 71, 66, 32,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 3
+        ]
+        let data = Data(bytes)
+        let decoder = ASEColorSwatchDecoder()
+        #expect(throws: ColorSwatchDecoderError.invalidColorType(identifier: 3)) {
+            try decoder.decode(from: data)
+        }
+    }
 }

@@ -54,7 +54,39 @@ class WritableData {
         }
     }
     
-    // FIXME: Implement: writeASCII, writeCString, writeUTF16
+    func writeUTF8(string: String, representation: StringRepresentation = .content) {
+        write(
+            string: string,
+            representation: representation
+        ) { string in
+            for character in string.utf8 {
+                write(byte: character)
+            }
+        }
+    }
+    
+    func writeUTF16(string: String, representation: StringRepresentation = .content) {
+        write(
+            string: string,
+            representation: representation
+        ) { string in
+            for character in string.utf8 {
+                write(byte: character)
+            }
+        }
+    }
+    
+    private func write(string: String, representation: StringRepresentation, writeHandler: (String) -> Void) {
+        if representation.contains(.lengthPrefixed) {
+            write(int16: UInt16(representation.contentLength(of: string)))
+        }
+        
+        writeHandler(string)
+        
+        if representation.contains(.nullTerminated) {
+            write(byte: 0)
+        }
+    }
 }
 
 extension WritableData {

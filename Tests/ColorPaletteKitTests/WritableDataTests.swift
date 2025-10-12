@@ -11,6 +11,14 @@ import Testing
 
 struct WritableDataTests {
     @Test
+    func emptyInit() throws {
+        let writable = WritableData()
+        let readBytes = writable.bytes
+        #expect(readBytes.isEmpty)
+        #expect(writable.isEmpty)
+    }
+    
+    @Test
     func initFromData() throws {
         let expectedBytes = (0..<Int.random(in: 4..<20)).map { _ in UInt8.random(in: 0..<255) }
         let data = Data(expectedBytes)

@@ -93,4 +93,8 @@ extension WritableData {
     convenience init(data: Data) {
         self.init(bytes: [UInt8](data))
     }
+    
+    convenience init() {
+        self.init(bytes: [])
+    }
 }

@@ -36,8 +36,8 @@ class WritableData {
         withUnsafePointer(to: int16) { int16Pointer in
             let int8Pointer = UnsafeRawPointer(int16Pointer)
                 .assumingMemoryBound(to: UInt8.self)
-            let firstByte = int8Pointer.pointee
-            let secondByte = int8Pointer.advanced(by: 1).pointee
+            let secondByte = int8Pointer.pointee
+            let firstByte = int8Pointer.advanced(by: 1).pointee
             write(bytes: [firstByte, secondByte])
         }
     }
@@ -46,10 +46,10 @@ class WritableData {
         withUnsafePointer(to: int32) { int32Pointer in
             let int8Pointer = UnsafeRawPointer(int32Pointer)
                 .assumingMemoryBound(to: UInt8.self)
-            let firstByte = int8Pointer.pointee
-            let secondByte = int8Pointer.advanced(by: 1).pointee
-            let thirdByte = int8Pointer.advanced(by: 2).pointee
-            let fourthByte = int8Pointer.advanced(by: 3).pointee
+            let fourthByte = int8Pointer.pointee
+            let thirdByte = int8Pointer.advanced(by: 1).pointee
+            let secondByte = int8Pointer.advanced(by: 2).pointee
+            let firstByte = int8Pointer.advanced(by: 3).pointee
             write(bytes: [firstByte, secondByte, thirdByte, fourthByte])
         }
     }
@@ -70,8 +70,8 @@ class WritableData {
             string: string,
             representation: representation
         ) { string in
-            for character in string.utf8 {
-                write(byte: character)
+            for character in string.utf16 {
+                write(int16: character)
             }
         }
     }

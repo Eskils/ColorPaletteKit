@@ -8,7 +8,7 @@
 import Foundation
 
 class WritableData {
-    private var bytes: [UInt8]
+    var bytes: [UInt8]
     
     var count: Int {
         bytes.count

@@ -70,6 +70,17 @@ extension ASEColorSwatchBlock {
                 .colorEntry
         }
     }
+    
+    var numberOfBlocks: Int {
+        switch self {
+        case .group(let group):
+            2 + group.components.reduce(0) { partialResult, block in
+                partialResult + block.numberOfBlocks
+            }
+        case .colorEntry:
+            1
+        }
+    }
 }
 
 extension ASEColorSwatchBlock.ExtensiveKind {

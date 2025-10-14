@@ -76,6 +76,10 @@ class WritableData {
         }
     }
     
+    func append(_ other: WritableData) {
+        self.bytes += other.bytes
+    }
+    
     private func write(string: String, representation: StringRepresentation, writeHandler: (String) -> Void) {
         if representation.contains(.lengthPrefixed) {
             write(int16: UInt16(representation.contentLength(of: string)))

@@ -220,4 +220,20 @@ struct WritableDataTests {
         writable.writeUTF16(string: "ABC ", representation: [.lengthPrefixed, .nullTerminated])
         #expect(writable.bytes == [0, 5, 0, 65, 0, 66, 0, 67, 0, 32, 0])
     }
+    
+    @Test
+    func appendToEmptyData() throws {
+        let expectedBytes: [UInt8] = [0, 1, 2]
+        let writable = WritableData()
+        writable.append(WritableData(bytes: expectedBytes))
+        #expect(writable.bytes == expectedBytes)
+    }
+    
+    @Test
+    func appendAtOffset() throws {
+        let expectedBytes: [UInt8] = [0, 1, 2, 3, 4, 5]
+        let writable = WritableData(bytes: [0, 1, 2])
+        writable.append(WritableData(bytes: [3, 4, 5]))
+        #expect(writable.bytes == expectedBytes)
+    }
 }

@@ -29,4 +29,35 @@ public struct ASEColorSwatchEncoder: ColorSwatchEncoder {
         data.write(int16: header.version.minor)
         data.write(int32: header.numberOfBlocks)
     }
+    
+    private func write(block: ASEColorSwatchBlock, to data: WritableData) {
+    }
+    
+    private func write(group: ASEColorSwatchBlock.Group, to data: WritableData) {
+        
+    }
+    
+    private func write(colorEntry: ASEColorSwatchBlock.ColorEntry, to data: WritableData) {
+        let blockData = WritableData()
+        blockData.writeUTF16(string: colorEntry.name, representation: [.lengthPrefixed, .nullTerminated])
+        blockData.writeUTF8(string: colorEntry.colorModel.identifier)
+        write(colorValues: colorEntry.components, for: colorEntry.colorModel, to: blockData)
+        blockData.write(int16: colorEntry.colorType.identifier)
+        
+        data.write(int16: ASEColorSwatchBlock.ExtensiveKind.colorEntry.identifier)
+        data.write(int32: UInt32(blockData.count))
+        data.append(blockData)
+    }
+    
+    private func write(colorValues: [Float], for model: ASEColorSwatchBlock.ColorModel, to data: WritableData) {
+        (0..<model.numberOfComponents).forEach { i in
+            let value = colorValues.indices.contains(i) ? 0 : colorValues[i]
+            let valueAsInt32 = withUnsafePointer(to: value) { pointer in
+                UnsafeRawPointer(pointer)
+                    .assumingMemoryBound(to: UInt32.self)
+                    .pointee
+            }
+            data.write(int32: valueAsInt32)
+        }
+    }
 }

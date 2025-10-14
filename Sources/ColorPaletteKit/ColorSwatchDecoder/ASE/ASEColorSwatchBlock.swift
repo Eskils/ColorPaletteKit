@@ -92,6 +92,14 @@ extension ASEColorSwatchBlock.ExtensiveKind {
         default: return nil
         }
     }
+    
+    var identifier: UInt16 {
+        switch self {
+        case .groupStart: 0xc001
+        case .groupEnd: 0xc002
+        case .colorEntry: 0x01
+        }
+    }
 }
 
 extension ASEColorSwatchBlock.ColorModel {
@@ -102,6 +110,15 @@ extension ASEColorSwatchBlock.ColorModel {
         case "LAB ": self = .lab
         case "GRAY": self = .gray
         default: return nil
+        }
+    }
+    
+    var identifier: String {
+        switch self {
+        case .rgb: "RGB "
+        case .cmyk: "CMYK"
+        case .lab: "LAB "
+        case .gray: "GRAY"
         }
     }
     
@@ -126,6 +143,14 @@ extension ASEColorSwatchBlock.ColorType {
         case 0x1: self = .spot
         case 0x2: self = .normal
         default: return nil
+        }
+    }
+    
+    var identifier: UInt16 {
+        switch self {
+        case .global: 0x0
+        case .spot: 0x1
+        case .normal: 0x2
         }
     }
 }

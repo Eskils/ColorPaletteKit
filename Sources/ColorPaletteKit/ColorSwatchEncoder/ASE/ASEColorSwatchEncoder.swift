@@ -20,6 +20,10 @@ public struct ASEColorSwatchEncoder: ColorSwatchEncoder {
         let header = ASEColorSwatchHeader(format: "ASEF", version: (1, 0), numberOfBlocks: UInt32(numberOfBlocks))
         write(header: header, to: writable)
         
+        for block in swatch {
+            write(block: block, to: writable)
+        }
+        
         return Data(writable.bytes)
     }
     

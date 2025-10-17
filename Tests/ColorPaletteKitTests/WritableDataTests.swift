@@ -204,7 +204,7 @@ struct WritableDataTests {
     func writeUTF16WithNullTerminatedRepresentation() throws {
         let writable = WritableData(bytes: [])
         writable.writeUTF16(string: "ABC ", representation: .nullTerminated)
-        #expect(writable.bytes == [0, 65, 0, 66, 0, 67, 0, 32, 0])
+        #expect(writable.bytes == [0, 65, 0, 66, 0, 67, 0, 32, 0, 0])
     }
     
     @Test
@@ -218,7 +218,7 @@ struct WritableDataTests {
     func writeUTF16WithLengthPrefixedAndNullTerminatedRepresentation() throws {
         let writable = WritableData(bytes: [])
         writable.writeUTF16(string: "ABC ", representation: [.lengthPrefixed, .nullTerminated])
-        #expect(writable.bytes == [0, 5, 0, 65, 0, 66, 0, 67, 0, 32, 0])
+        #expect(writable.bytes == [0, 5, 0, 65, 0, 66, 0, 67, 0, 32, 0, 0])
     }
     
     @Test

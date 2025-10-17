@@ -57,7 +57,8 @@ class WritableData {
     func writeUTF8(string: String, representation: StringRepresentation = .content) {
         write(
             string: string,
-            representation: representation
+            representation: representation,
+            nullTerminator: [0]
         ) { string in
             for character in string.utf8 {
                 write(byte: character)
@@ -68,7 +69,8 @@ class WritableData {
     func writeUTF16(string: String, representation: StringRepresentation = .content) {
         write(
             string: string,
-            representation: representation
+            representation: representation,
+            nullTerminator: [0, 0]
         ) { string in
             for character in string.utf16 {
                 write(int16: character)
@@ -80,7 +82,7 @@ class WritableData {
         self.bytes += other.bytes
     }
     
-    private func write(string: String, representation: StringRepresentation, writeHandler: (String) -> Void) {
+    private func write(string: String, representation: StringRepresentation, nullTerminator: @autoclosure () -> [UInt8], writeHandler: (String) -> Void) {
         if representation.contains(.lengthPrefixed) {
             write(int16: UInt16(representation.contentLength(of: string)))
         }
@@ -88,7 +90,7 @@ class WritableData {
         writeHandler(string)
         
         if representation.contains(.nullTerminated) {
-            write(byte: 0)
+            write(bytes: nullTerminator())
         }
     }
 }

@@ -73,7 +73,7 @@ public struct ASEColorSwatchEncoder: ColorSwatchEncoder {
     
     private func write(colorValues: [Float], for model: ASEColorSwatchBlock.ColorModel, to data: WritableData) {
         (0..<model.numberOfComponents).forEach { i in
-            let value = colorValues.indices.contains(i) ? 0 : colorValues[i]
+            let value = colorValues.indices.contains(i) ? colorValues[i] : 0
             let valueAsInt32 = withUnsafePointer(to: value) { pointer in
                 UnsafeRawPointer(pointer)
                     .assumingMemoryBound(to: UInt32.self)

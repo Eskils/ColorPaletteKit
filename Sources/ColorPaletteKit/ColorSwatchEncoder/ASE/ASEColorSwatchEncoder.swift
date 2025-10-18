@@ -47,13 +47,13 @@ public struct ASEColorSwatchEncoder: ColorSwatchEncoder {
         let blockData = WritableData()
         blockData.writeUTF16(string: group.name, representation: [.lengthPrefixed, .nullTerminated])
         
-        for component in group.components {
-            write(block: component, to: blockData)
-        }
-        
         data.write(int16: ASEColorSwatchBlock.ExtensiveKind.groupStart.identifier)
         data.write(int32: UInt32(blockData.count))
         data.append(blockData)
+        
+        for component in group.components {
+            write(block: component, to: data)
+        }
         
         data.write(int16: ASEColorSwatchBlock.ExtensiveKind.groupEnd.identifier)
         data.write(int32: 0)

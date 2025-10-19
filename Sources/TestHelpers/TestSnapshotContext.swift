@@ -12,7 +12,7 @@ import Foundation
 public struct TestSnapshotContext {
     let testsDirectory: URL
     
-    @available(macOS 13.0, *)
+    @available(macOS 13.0, iOS 16.0, *)
     private func filePath(name: String, directory: String) -> String {
         "\(testsDirectory.path())/\(directory)/\(name)"
     }
@@ -21,7 +21,7 @@ public struct TestSnapshotContext {
         self.testsDirectory = testsDirectory
     }
     
-    @available(macOS 13.0, *)
+    @available(macOS 13.0, iOS 16.0, *)
     public func assertSnapshot(name: String, for operations: () async throws -> CGImage) async throws {
         let image = try await operations()
         let fileName = name.lowercased().replacingOccurrences(of: " ", with: "-")

@@ -7,7 +7,7 @@
 
 import CoreGraphics
 
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, *)
 public final class ImagePaletteEngine {
     private let paletteComputer: any ImagePaletteComputer
     

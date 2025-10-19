@@ -1,0 +1,34 @@
+//
+//  CGColorConvertable.swift
+//  ColorPaletteKit
+//
+//  Created by Eskil Gjerde Sviggum on 19/10/2025.
+//
+
+import CoreGraphics
+
+protocol CGColorConvertable {
+    func cgColor(of values: [Float]) -> CGColor
+}
+
+extension CGColorConvertable {
+    func convert(values: [Float], to colorSpace: CGColorSpace) throws(ColorConverterError) -> [Float] {
+        let cgColor = cgColor(of: values)
+        guard
+            let converted = cgColor.converted(to: colorSpace, intent: .defaultIntent, options: nil),
+            let components = components(of: converted)
+        else {
+            throw .invalidConversion
+        }
+        
+        return components
+    }
+    
+    func components(of cgColor: CGColor) -> [Float]? {
+        guard let components = cgColor.components else {
+            return nil
+        }
+        
+        return components.map { Float($0) }
+    }
+}

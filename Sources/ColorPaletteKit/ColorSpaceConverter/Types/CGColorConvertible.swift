@@ -8,12 +8,12 @@
 import CoreGraphics
 
 protocol CGColorConvertible {
-    func cgColor(of values: [Float]) -> CGColor
+    func cgColor(of values: [Float]) throws(ColorConverterError) -> CGColor
 }
 
 extension CGColorConvertible {
     func convert(values: [Float], to colorSpace: CGColorSpace) throws(ColorConverterError) -> [Float] {
-        let cgColor = cgColor(of: values)
+        let cgColor = try cgColor(of: values)
         guard
             let converted = cgColor.converted(to: colorSpace, intent: .defaultIntent, options: nil),
             let components = components(of: converted)

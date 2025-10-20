@@ -9,4 +9,5 @@ public enum ColorConverterError: Error {
     case tooFewColorValues(received: Int, expected: Int)
     case invalidConversion
     case invalidColorSpace(name: String)
+    case cannotRepresentColorInColorSpace(name: String)
 }

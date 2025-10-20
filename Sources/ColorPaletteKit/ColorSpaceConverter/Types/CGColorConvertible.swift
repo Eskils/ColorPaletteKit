@@ -7,11 +7,11 @@
 
 import CoreGraphics
 
-protocol CGColorConvertable {
+protocol CGColorConvertible {
     func cgColor(of values: [Float]) -> CGColor
 }
 
-extension CGColorConvertable {
+extension CGColorConvertible {
     func convert(values: [Float], to colorSpace: CGColorSpace) throws(ColorConverterError) -> [Float] {
         let cgColor = cgColor(of: values)
         guard

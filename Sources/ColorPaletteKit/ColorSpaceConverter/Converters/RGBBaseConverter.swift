@@ -15,7 +15,7 @@ import AppKit
 
 struct RGBBaseConverter: BaseColorConverter {
     let target: ColorSpaceKind
-    var requiredNumberOfValues = 3
+    let requiredNumberOfValues = 3
     
     func rgb(from values: [Float]) throws(ColorConverterError) -> [Float] {
         values
@@ -59,7 +59,7 @@ struct RGBBaseConverter: BaseColorConverter {
     }
 }
 
-extension RGBBaseConverter: CGColorConvertable {
+extension RGBBaseConverter: CGColorConvertible {
     func cgColor(of values: [Float]) -> CGColor {
         CGColor(
             red: CGFloat(values[0]),

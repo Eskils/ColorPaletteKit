@@ -9,7 +9,7 @@ import Foundation
 import CoreGraphics
 import ImageIO
 
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, *)
 public struct ImageFileInterface {
     private init() {}
     

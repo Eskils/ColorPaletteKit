@@ -7,7 +7,7 @@
 
 import CoreGraphics
 
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, *)
 public func isImageEqual(original imagePath: String, transformed producedOutputPath: String, expected expectedImagePath: String, afterPerformingImageOperations block: (CGImage) throws -> CGImage) throws -> Bool {
     let inputImage = try ImageFileInterface.image(atPath: imagePath)
     let processedImage = try block(inputImage)
@@ -19,7 +19,7 @@ public func isImageEqual(original imagePath: String, transformed producedOutputP
     return try isImageEqual(actual: processedImage, expected: expectedImage)
 }
 
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, *)
 public func isImageEqual(actual: CGImage, transformed producedOutputPath: String? = nil, expected expectedImagePath: String) throws -> Bool {
     if let producedOutputPath {
         try ImageFileInterface.write(image: actual, toPath: producedOutputPath)

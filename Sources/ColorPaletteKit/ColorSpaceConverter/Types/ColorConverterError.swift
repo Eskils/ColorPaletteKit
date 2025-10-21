@@ -11,3 +11,6 @@ public enum ColorConverterError: Error {
     case invalidColorSpace(name: String)
     case cannotRepresentColorInColorSpace(name: String)
 }
+
+extension ColorConverterError: Equatable {
+}

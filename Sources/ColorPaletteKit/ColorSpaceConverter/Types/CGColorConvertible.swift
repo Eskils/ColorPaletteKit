@@ -12,7 +12,11 @@ protocol CGColorConvertible {
 }
 
 extension CGColorConvertible {
-    func convert(values: [Float], to colorSpace: CGColorSpace) throws(ColorConverterError) -> [Float] {
+    func convert(
+        values: [Float],
+        to colorSpace: CGColorSpace,
+        preserveTransparency: Bool = false
+    ) throws(ColorConverterError) -> [Float] {
         let cgColor = try cgColor(of: values)
         guard
             let converted = cgColor.converted(to: colorSpace, intent: .defaultIntent, options: nil),
@@ -21,7 +25,11 @@ extension CGColorConvertible {
             throw .invalidConversion
         }
         
-        return components
+        if preserveTransparency {
+            return components
+        } else {
+            return Array(components[components.startIndex..<components.index(before: components.endIndex)])
+        }
     }
     
     func components(of cgColor: CGColor) -> [Float]? {

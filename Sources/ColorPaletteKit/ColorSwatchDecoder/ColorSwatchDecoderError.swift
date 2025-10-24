@@ -12,4 +12,5 @@ public enum ColorSwatchDecoderError: Error, Equatable {
     case invalidBlockType(typeIdentifier: UInt16)
     case invalidColorModel(identifier: String)
     case invalidColorType(identifier: UInt16)
+    case cannotConvertColor(underlying: ColorConverterError)
 }

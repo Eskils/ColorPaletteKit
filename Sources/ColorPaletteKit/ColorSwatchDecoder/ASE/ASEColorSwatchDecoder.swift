@@ -16,6 +16,20 @@ public struct ASEColorSwatchDecoder: ColorSwatchDecoder {
     public init() {
     }
     
+    public func decodeColors(from data: Data) throws(ColorSwatchDecoderError) -> [SIMD3<Float>] {
+        let blocks = try decode(from: data)
+        let colorEntries = blocks.flatMap { $0.colorEntries }
+        do {
+            return try colorEntries.map{ entry throws(ColorConverterError) in
+                let converter = ColorSpaceConverter(from: entry.colorModel.colorSpaceKind, to: .rgb)
+                let convertedColor = try converter.convert(color: entry.components)
+                return SIMD3(convertedColor)
+            }
+        } catch {
+            throw .cannotConvertColor(underlying: error)
+        }
+    }
+    
     public func decode(from data: Data) throws(ColorSwatchDecoderError) -> [ASEColorSwatchBlock] {
         let consumable = ConsumableData(data: data)
         let header = readHeader(data: consumable)

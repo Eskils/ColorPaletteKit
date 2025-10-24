@@ -81,6 +81,15 @@ extension ASEColorSwatchBlock {
             1
         }
     }
+    
+    var colorEntries: [ColorEntry] {
+        switch self {
+        case .colorEntry(let colorEntry):
+            [colorEntry]
+        case .group(let group):
+            group.components.flatMap { $0.colorEntries }
+        }
+    }
 }
 
 extension ASEColorSwatchBlock.ExtensiveKind {
@@ -132,6 +141,19 @@ extension ASEColorSwatchBlock.ColorModel {
             3
         case .gray:
             1
+        }
+    }
+    
+    var colorSpaceKind: ColorSpaceKind {
+        switch self {
+        case .rgb:
+            .rgb
+        case .cmyk:
+            .cmyk
+        case .lab:
+            .lab
+        case .gray:
+            .gray
         }
     }
 }

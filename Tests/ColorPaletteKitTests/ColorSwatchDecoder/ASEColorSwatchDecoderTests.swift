@@ -122,6 +122,41 @@ struct ASEColorSwatchDecoderTests {
     }
     
     @Test
+    func decodePaletteIntoColors() throws {
+        let expectedColors: [SIMD3<Float>] = [
+            SIMD3(0.8901961, 0.45882353, 1.0),
+            SIMD3(0.5019608, 0.49411765, 1.0),
+            SIMD3(1.0, 0.44313726, 0.1882353),
+            SIMD3(0.3372549, 1.0, 0.6)
+        ]
+        
+        let path = filePath(name: "simple-palette.ase", directory: "TestAssets/Swatches/ASE")
+        let data = try Data(contentsOf: URL(filePath: path))
+        let decoder = ASEColorSwatchDecoder()
+        let blocks = try decoder.decodeColors(from: data)
+        
+        #expect(blocks == expectedColors)
+    }
+    
+    @Test
+    func decodePaletteWithGroupIntoColors() throws {
+        let expectedColors: [SIMD3<Float>] = [
+            SIMD3(0.0196078, 0.580392, 0.509804),
+            SIMD3(0.0, 0.619608, 0.25098),
+            SIMD3(0.0470588, 0.529412, 0.0),
+            SIMD3(0.427451, 0.619608, 0.0313726),
+            SIMD3(0.580392, 0.537255, 0.0)
+        ]
+        
+        let path = filePath(name: "group-palette.ase", directory: "TestAssets/Swatches/ASE")
+        let data = try Data(contentsOf: URL(filePath: path))
+        let decoder = ASEColorSwatchDecoder()
+        let blocks = try decoder.decodeColors(from: data)
+        
+        #expect(blocks == expectedColors)
+    }
+    
+    @Test
     func decodePaletteWithInvalidFormatInHeader() throws {
         let bytes: [UInt8] = [65, 66, 67, 68]
         let data = Data(bytes)

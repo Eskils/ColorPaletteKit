@@ -7,7 +7,7 @@
 
 import Foundation
 import CoreGraphics
-import ColorPaletteKit
+@testable import ColorPaletteKit
 import Testing
 import simd
 import Accelerate

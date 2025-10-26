@@ -9,7 +9,7 @@ import CoreGraphics
 import Accelerate
 
 @available(macOS 13.0, iOS 16.0, *)
-public final class KMeansImagePaletteComputer: ImagePaletteComputer {
+final class KMeansImagePaletteComputer: ImagePaletteComputer {
     private let cgImage: CGImage
     private let imageFormat: vImage_CGImageFormat
     

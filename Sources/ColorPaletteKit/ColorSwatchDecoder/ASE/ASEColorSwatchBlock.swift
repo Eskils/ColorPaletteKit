@@ -6,8 +6,11 @@
 //
 
 
+/// A block in the ASE format
 public enum ASEColorSwatchBlock: Equatable {
+    /// A group of colors
     case group(Group)
+    /// A single color
     case colorEntry(ColorEntry)
 }
 
@@ -23,8 +26,12 @@ extension ASEColorSwatchBlock {
         case colorEntry
     }
     
+    /// A group of colors
     public struct Group: Equatable {
+        /// The name of the group
         public let name: String
+        /// The components in the group.
+        /// This could be colors, groups or a mix of both.
         public let components: [ASEColorSwatchBlock]
         
         public init(name: String, components: [ASEColorSwatchBlock]) {
@@ -33,10 +40,17 @@ extension ASEColorSwatchBlock {
         }
     }
     
+    /// A single color
     public struct ColorEntry: Equatable {
+        /// The name of the color
+        /// This is often an empty string.
         public let name: String
+        /// The color space of the color
         public let colorModel: ColorModel
+        /// The type of color
         public let colorType: ColorType
+        /// The values of the color.
+        /// The number of entries depends on ``colorModel``
         public let components: [Float]
         
         public init(name: String, colorModel: ColorModel, colorType: ColorType, components: [Float]) {
@@ -47,6 +61,7 @@ extension ASEColorSwatchBlock {
         }
     }
     
+    /// The color space of the color
     public enum ColorModel: Equatable {
         case rgb
         case cmyk
@@ -54,6 +69,7 @@ extension ASEColorSwatchBlock {
         case gray
     }
     
+    /// The type of color
     public enum ColorType: Equatable {
         case global
         case spot

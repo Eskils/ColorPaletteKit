@@ -8,7 +8,8 @@
 import CoreGraphics
 
 /// Implement this protocol to define a new PaletteImageRenderer.
-/// You may then add a new case to ``PaletteImageRendererKind``
+///
+/// A new PaletteImageRenderer should add a new case to ``PaletteImageRendererKind``
 /// to allow using this renderer in the ``PaletteImageEngine``.
 public protocol PaletteImageRenderer {
     /// Render `colors` to an image of the requested `size`.

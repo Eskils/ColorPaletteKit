@@ -7,10 +7,14 @@
 
 import Foundation
 
+/// Object to encode a color swatch in the Adobe Swatch Exchange (ASE) format.
 public struct ASEColorSwatchEncoder: ColorSwatchEncoder {
     public init() {
     }
     
+    /// Encode `swatch` in ASE format.
+    /// - Parameter swatch: A list of color blocks.
+    /// - Returns: Encoded data
     public func encode(_ swatch: [ASEColorSwatchBlock]) throws(ColorSwatchEncoderError) -> Data {
         let writable = WritableData()
         

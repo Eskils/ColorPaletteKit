@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Object to decode color schemes in the Adobe Swatch Exchange (ASE) format.
 public struct ASEColorSwatchDecoder: ColorSwatchDecoder {
     private let expectedFormat = "ASEF"
     private let supportedVersions = [
@@ -16,6 +17,10 @@ public struct ASEColorSwatchDecoder: ColorSwatchDecoder {
     public init() {
     }
     
+    
+    /// Decode swatch from `data` to a list of RGB colors.
+    /// - Parameter data: The data to decode
+    /// - Returns: A list of RGB color values
     public func decodeColors(from data: Data) throws(ColorSwatchDecoderError) -> [SIMD3<Float>] {
         let blocks = try decode(from: data)
         let colorEntries = blocks.flatMap { $0.colorEntries }
@@ -30,6 +35,9 @@ public struct ASEColorSwatchDecoder: ColorSwatchDecoder {
         }
     }
     
+    /// Decode swatch from `data`.
+    /// - Parameter data: The data to decode  in ASE format
+    /// - Returns: A list of color swatch blocks
     public func decode(from data: Data) throws(ColorSwatchDecoderError) -> [ASEColorSwatchBlock] {
         let consumable = ConsumableData(data: data)
         let header = readHeader(data: consumable)

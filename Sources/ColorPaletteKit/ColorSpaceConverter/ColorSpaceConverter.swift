@@ -5,6 +5,7 @@
 //  Created by Eskil Gjerde Sviggum on 19/10/2025.
 //
 
+/// Object to convert colors from one color space to another.
 public struct ColorSpaceConverter {
     private let converter: any ColorConverterComputer
     
@@ -16,6 +17,9 @@ public struct ColorSpaceConverter {
         self.converter = transformation.converter()
     }
     
+    /// Convert `color` to the target color space.
+    /// - Parameter color: List of color values in the base color space
+    /// - Returns: List of color values in the target color space
     public func convert(color: [Float]) throws(ColorConverterError) -> [Float] {
         try converter.convert(colorValues: color)
     }

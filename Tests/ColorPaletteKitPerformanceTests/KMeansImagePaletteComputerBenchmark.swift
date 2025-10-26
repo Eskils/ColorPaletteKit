@@ -7,7 +7,7 @@
 
 import Foundation
 import Testing
-import ColorPaletteKit
+@testable import ColorPaletteKit
 import TestHelpers
 
 struct KMeansImagePaletteComputerBenchmark {

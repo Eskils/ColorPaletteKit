@@ -8,7 +8,7 @@
 import CoreGraphics
 import Accelerate
 
-public final class EquallySpacedSamplesPaletteComputer: ImagePaletteComputer {
+final class EquallySpacedSamplesPaletteComputer: ImagePaletteComputer {
     private let imageBuffer: vImage_Buffer
     private let imageData: UnsafeMutablePointer<Float>
     

@@ -17,19 +17,33 @@ public struct ASEColorSwatchDecoder: ColorSwatchDecoder {
     public init() {
     }
     
-    
     /// Decode swatch from `data` to a list of RGB colors.
     /// - Parameter data: The data to decode
     /// - Returns: A list of RGB color values
     public func decodeColors(from data: Data) throws(ColorSwatchDecoderError) -> [SIMD3<Float>] {
+        let (colors, _) = try decodeColorsAndGroupName(from: data)
+        return colors
+    }
+    
+    
+    /// Decode swatch from `data` to a list of RGB colors and a name if it exists.
+    /// - Parameter data: The data to decode
+    /// - Returns: A list of RGB color values and group name
+    public func decodeColorsAndGroupName(from data: Data) throws(ColorSwatchDecoderError) -> (colors: [SIMD3<Float>], name: String?) {
         let blocks = try decode(from: data)
+        let name: String? = if let firstBlock = blocks.first, case let .group(group) = firstBlock {
+            group.name
+        } else {
+            nil
+        }
         let colorEntries = blocks.flatMap { $0.colorEntries }
         do {
-            return try colorEntries.map{ entry throws(ColorConverterError) in
+            let colors = try colorEntries.map { entry throws(ColorConverterError) in
                 let converter = ColorSpaceConverter(from: entry.colorModel.colorSpaceKind, to: .rgb)
                 let convertedColor = try converter.convert(color: entry.components)
                 return SIMD3(convertedColor)
             }
+            return (colors, name)
         } catch {
             throw .cannotConvertColor(underlying: error)
         }

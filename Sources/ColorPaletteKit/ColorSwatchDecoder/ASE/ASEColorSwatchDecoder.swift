@@ -114,7 +114,7 @@ public struct ASEColorSwatchDecoder: ColorSwatchDecoder {
         // Skip block count
         data.skip(bytes: 4)
         let nameCount = data.readInt16(mode: .consume)
-        let groupName = data.readUTF16(of: Int(nameCount), mode: .consume)
+        let groupName = data.readUTF16(of: Int(nameCount), mode: .consume).trimmingCharacters(in: .controlCharacters)
         
         var components = [ASEColorSwatchBlock]()
         
@@ -134,7 +134,7 @@ public struct ASEColorSwatchDecoder: ColorSwatchDecoder {
         // Skip block count
         data.skip(bytes: 4)
         let nameCount = data.readInt16(mode: .consume)
-        let colorName = data.readUTF16(of: Int(nameCount), mode: .consume)
+        let colorName = data.readUTF16(of: Int(nameCount), mode: .consume).trimmingCharacters(in: .controlCharacters)
         let colorModelIdentifier = data.readASCII(of: 4, mode: .consume)
         
         guard let colorModel = ASEColorSwatchBlock.ColorModel(identifier: colorModelIdentifier) else {

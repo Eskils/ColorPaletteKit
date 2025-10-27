@@ -66,11 +66,11 @@ struct ASEColorSwatchDecoderTests {
         let expectedPalette: [ASEColorSwatchBlock] = [
             .group(
                 ASEColorSwatchBlock.Group(
-                    name: "Adobe Swatch Exchange file\0",
+                    name: "Adobe Swatch Exchange file",
                     components: [
                         .colorEntry(
                             ASEColorSwatchBlock.ColorEntry(
-                                name: "\0",
+                                name: "",
                                 colorModel: .rgb,
                                 colorType: .normal,
                                 components: [0.0196078, 0.580392, 0.509804]
@@ -78,7 +78,7 @@ struct ASEColorSwatchDecoderTests {
                         ),
                         .colorEntry(
                             ASEColorSwatchBlock.ColorEntry(
-                                name: "\0",
+                                name: "",
                                 colorModel: .rgb,
                                 colorType: .normal,
                                 components: [0.0, 0.619608, 0.25098]
@@ -86,7 +86,7 @@ struct ASEColorSwatchDecoderTests {
                         ),
                         .colorEntry(
                             ASEColorSwatchBlock.ColorEntry(
-                                name: "\0",
+                                name: "",
                                 colorModel: .rgb,
                                 colorType: .normal,
                                 components: [0.0470588, 0.529412, 0.0]
@@ -94,7 +94,7 @@ struct ASEColorSwatchDecoderTests {
                         ),
                         .colorEntry(
                             ASEColorSwatchBlock.ColorEntry(
-                                name: "\0",
+                                name: "",
                                 colorModel: .rgb,
                                 colorType: .normal,
                                 components: [0.427451, 0.619608, 0.0313726]
@@ -102,7 +102,7 @@ struct ASEColorSwatchDecoderTests {
                         ),
                         .colorEntry(
                             ASEColorSwatchBlock.ColorEntry(
-                                name: "\0",
+                                name: "",
                                 colorModel: .rgb,
                                 colorType: .normal,
                                 components: [0.580392, 0.537255, 0.0]
@@ -190,7 +190,7 @@ struct ASEColorSwatchDecoderTests {
         let result = try decoder.decodeColorsAndGroupName(from: data)
         
         #expect(result.colors == expectedColors)
-        #expect(result.name == "Adobe Swatch Exchange file\0")
+        #expect(result.name == "Adobe Swatch Exchange file")
     }
     
     @Test

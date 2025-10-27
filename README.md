@@ -140,13 +140,23 @@ Use `ASEColorSwatchEncoder` to encode a list of colors to the Adobe Swatch Excha
 
 Alpha is not supported in ASE.
 
-**Example**
+**Examples**
 
 ```swift
 let swatch: [ASEColorSwatchBlock] = ...
 let encoder = ASEColorSwatchEncoder()
 let data = try encoder.encode(swatch)
 ```
+
+You can also encode a list of RGB colors using `encode(colors:name:)`:
+
+```swift
+let colors: [SIMD3<Float>] = ...
+let encoder = ASEColorSwatchEncoder()
+let data = try encoder.encode(colors: colors, name: "My palette")
+```
+
+`encode(colors:name:)` will call the base `encode(_:)` with the list of colors converted to a list of `ASEColorSwatchBlock`. Supplying a name will wrap the colors in a group.
 
 ### Decode a palette from another program
 

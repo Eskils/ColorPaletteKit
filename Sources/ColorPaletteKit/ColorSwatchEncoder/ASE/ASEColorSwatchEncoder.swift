@@ -12,6 +12,41 @@ public struct ASEColorSwatchEncoder: ColorSwatchEncoder {
     public init() {
     }
     
+    /// Encode `colors` with an optional `name` in ASE format.
+    /// - Parameters:
+    ///   - colors: List of colors in RGB color space
+    ///   - name: Name of palette
+    /// - Returns: Encoded data
+    ///
+    /// Supplying a `name` will wrap the colors in a group.
+    public func encode(colors: [SIMD3<Float>], name: String? = nil) throws(ColorSwatchEncoderError) -> Data {
+        let colorBlocks = colors.map { color in
+            ASEColorSwatchBlock.colorEntry(
+                ASEColorSwatchBlock.ColorEntry(
+                    name: "",
+                    colorModel: .rgb,
+                    colorType: .normal,
+                    components: [color.x, color.y, color.z]
+                )
+            )
+        }
+        
+        let swatchBlocks = if let name {
+            [
+                ASEColorSwatchBlock.group(
+                    ASEColorSwatchBlock.Group(
+                        name: name,
+                        components: colorBlocks
+                    )
+                )
+            ]
+        } else {
+            colorBlocks
+        }
+        
+        return try encode(swatchBlocks)
+    }
+    
     /// Encode `swatch` in ASE format.
     /// - Parameter swatch: A list of color blocks.
     /// - Returns: Encoded data

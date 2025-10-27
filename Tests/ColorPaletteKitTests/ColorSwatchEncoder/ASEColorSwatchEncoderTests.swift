@@ -62,6 +62,27 @@ struct ASEColorSwatchEncoderTests {
     }
     
     @Test
+    func encodeColorsEncodesSingleColor() throws {
+        let expectedBytes: [UInt8] = [
+            65, 83, 69, 70,
+            0, 1, 0, 0,
+            0, 0, 0, 1,
+            0, 1,
+            0, 0, 0, 22,
+            0, 1, 0, 0,
+            82, 71, 66, 32,
+            63, 0, 0, 0,
+            63, 0, 0, 0,
+            63, 0, 0, 0,
+            0, 2
+        ]
+        let encoder = ASEColorSwatchEncoder()
+        let data = try encoder.encode(colors: [[0.5, 0.5, 0.5]])
+        let bytes = [UInt8](data)
+        #expect(bytes == expectedBytes)
+    }
+    
+    @Test
     func encodesGroup() throws {
         let path = filePath(name: "group-palette.ase", directory: "TestAssets/Swatches/ASE")
         let expectedData = try Data(contentsOf: URL(filePath: path))
@@ -119,5 +140,32 @@ struct ASEColorSwatchEncoderTests {
         )
         let bytes = [UInt8](data)
         #expect(bytes == [UInt8](expectedData))
+    }
+    
+    @Test
+    func encodeColorsEncodesGroupWhenSuppliedName() throws {
+        let expectedBytes: [UInt8] = [
+            65, 83, 69, 70,
+            0, 1, 0, 0,
+            0, 0, 0, 3,
+            192, 1,
+            0, 0, 0, 18,
+            0, 8,
+            0, 77, 0, 121, 0, 32, 0, 103, 0, 114, 0, 97, 0, 121, 0, 0,
+            0, 1,
+            0, 0, 0, 22,
+            0, 1, 0, 0,
+            82, 71, 66, 32,
+            63, 0, 0, 0,
+            63, 0, 0, 0,
+            63, 0, 0, 0,
+            0, 2,
+            192, 2,
+            0, 0, 0, 0
+        ]
+        let encoder = ASEColorSwatchEncoder()
+        let data = try encoder.encode(colors: [[0.5, 0.5, 0.5]], name: "My gray")
+        let bytes = [UInt8](data)
+        #expect(bytes == expectedBytes)
     }
 }

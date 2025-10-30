@@ -8,7 +8,7 @@
 import CoreGraphics
 
 /// Possible methods of extracting the dominant colors of an image.
-@available(macOS 13.0, iOS 16.0, *)
+@available(macOS 11.0, iOS 14.0, *)
 public enum ImagePaletteComputationMethod {
     /// Use kMeans to find the dominant colors.
     /// More accurate, takes a significant time to compute.
@@ -18,7 +18,7 @@ public enum ImagePaletteComputationMethod {
     case equallySpacedSamples
 }
 
-@available(macOS 13.0, iOS 16.0, *)
+@available(macOS 11.0, iOS 14.0, *)
 extension ImagePaletteComputationMethod {
     func computer(cgImage: CGImage) throws(ImagePaletteComputationError) -> any ImagePaletteComputer {
         switch self {
@@ -39,7 +39,7 @@ extension ImagePaletteComputationMethod {
     }
 }
 
-@available(macOS 13.0, iOS 16.0, *)
+@available(macOS 11.0, iOS 14.0, *)
 extension ImagePaletteComputationMethod {
     public struct KMeans {
         /// The maximum number of iterations before the computation gives its result.

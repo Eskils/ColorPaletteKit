@@ -8,7 +8,7 @@
 import CoreGraphics
 import Accelerate
 
-@available(macOS 13.0, iOS 16.0, *)
+@available(macOS 11.0, iOS 14.0, *)
 final class KMeansImagePaletteComputer: ImagePaletteComputer {
     private let width: Int
     private let height: Int
@@ -279,7 +279,7 @@ final class KMeansImagePaletteComputer: ImagePaletteComputer {
     }
 }
 
-@available(macOS 13.0, iOS 16.0, *)
+@available(macOS 11.0, iOS 14.0, *)
 extension KMeansImagePaletteComputer {
     struct Centroid {
         var color: SIMD3<Float>
@@ -287,7 +287,7 @@ extension KMeansImagePaletteComputer {
     }
 }
 
-@available(macOS 13.0, iOS 16.0, *)
+@available(macOS 11.0, iOS 14.0, *)
 extension KMeansImagePaletteComputer.Centroid {
     init(red: Float, green: Float, blue: Float) {
         self.init(color: [red, green, blue])

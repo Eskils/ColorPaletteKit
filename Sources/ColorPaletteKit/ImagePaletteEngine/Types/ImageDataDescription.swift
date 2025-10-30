@@ -27,7 +27,7 @@ extension ImageDataDescription {
             data: UnsafeMutableRawPointer(data),
             height: UInt(height),
             width: UInt(width),
-            rowBytes: width * components
+            rowBytes: MemoryLayout<Float>.size * width * components
         )
     }
 }

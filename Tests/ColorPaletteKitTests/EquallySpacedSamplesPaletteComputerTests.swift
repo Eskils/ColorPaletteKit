@@ -25,6 +25,44 @@ struct EquallySpacedSamplesPaletteComputerTests {
     }
     
     @Test
+    func findingFewDominantColorsInLeafFromImageDataDescription() async throws {
+        let expectedColors = [
+            SIMD3<Float>(0.2, 0.2, 0.0),
+            SIMD3<Float>(0.30980393, 0.30588236, 0.0),
+            SIMD3<Float>(0.5647059, 0.5647059, 0.21960784),
+            SIMD3<Float>(0.8392157, 0.81960785, 0.6)
+        ]
+        
+        let leaf = try ImageFileInterface.image(atPath: filePath(name: "leaf.jpg", directory: "TestAssets"))
+        var data = try #require(leaf.dataProvider?.data) as Data
+        let imageCapacity = leaf.bytesPerRow * leaf.height
+        let imageBytes = UnsafeMutablePointer<Float>.allocate(capacity: imageCapacity)
+        data.withUnsafeMutableBytes { bufferPointer in
+            let baseAddress = bufferPointer.baseAddress!.assumingMemoryBound(to: UInt8.self)
+            for i in 0..<imageCapacity {
+                imageBytes[i] = Float(baseAddress[i]) / 255
+            }
+        }
+        
+        let imageData = ImageDataDescription(
+            data: imageBytes,
+            width: leaf.width,
+            height: leaf.height,
+            components: leaf.bytesPerRow / leaf.width
+        )
+        let imagePaletteDescription = try EquallySpacedSamplesPaletteComputer(image: imageData, parameters: ())
+        let colors = imagePaletteDescription.dominantColors(amount: 4)
+        
+        #expect(
+            isWithinAcceptedThreshold(
+                colors: colors,
+                expectedColors: expectedColors,
+                threshold: 0.1
+            )
+        )
+    }
+    
+    @Test
     func findingFewDominantColorsInLeaf() throws {
         let expectedColors = [
             SIMD3<Float>(0.28235295, 0.3019608, 0.0),

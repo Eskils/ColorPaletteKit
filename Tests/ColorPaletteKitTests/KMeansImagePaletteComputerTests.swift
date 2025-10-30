@@ -25,6 +25,44 @@ struct KMeansImagePaletteComputerTests {
     }
     
     @Test
+    func findingFewDominantColorsInLeafFromImageDataDescription() async throws {
+        let expectedColors = [
+            SIMD3<Float>(0.23940559, 0.28212035, 0.008949555),
+            SIMD3<Float>(0.41786635, 0.46012294, 0.03973621),
+            SIMD3<Float>(0.6331294, 0.6580225, 0.24873522),
+            SIMD3<Float>(0.8355591, 0.8345491, 0.605728),
+        ]
+        
+        let leaf = try ImageFileInterface.image(atPath: filePath(name: "leaf.jpg", directory: "TestAssets"))
+        var data = try #require(leaf.dataProvider?.data) as Data
+        let imageCapacity = leaf.bytesPerRow * leaf.height
+        let imageBytes = UnsafeMutablePointer<Float>.allocate(capacity: imageCapacity)
+        data.withUnsafeMutableBytes { bufferPointer in
+            let baseAddress = bufferPointer.baseAddress!.assumingMemoryBound(to: UInt8.self)
+            for i in 0..<imageCapacity {
+                imageBytes[i] = Float(baseAddress[i]) / 255
+            }
+        }
+        
+        let imageData = ImageDataDescription(
+            data: imageBytes,
+            width: leaf.width,
+            height: leaf.height,
+            components: leaf.bytesPerRow / leaf.width
+        )
+        let imagePaletteDescription = try KMeansImagePaletteComputer(image: imageData)
+        let colors = imagePaletteDescription.dominantColors(amount: 4)
+        
+        #expect(
+            isWithinAcceptedThreshold(
+                colors: colors,
+                expectedColors: expectedColors,
+                threshold: 0.1
+            )
+        )
+    }
+    
+    @Test
     func findingFewDominantColorsInLeaf() throws {
         let expectedColors = [
             SIMD3<Float>(0.23940559, 0.28212035, 0.008949555),

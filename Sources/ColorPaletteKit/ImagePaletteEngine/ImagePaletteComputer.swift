@@ -20,6 +20,12 @@ public protocol ImagePaletteComputer<Parameters> {
     ///   - parameters: The settings for the computation method
     init(cgImage: CGImage, parameters: Parameters) throws(ImagePaletteComputationError)
     
+    /// Construct a new ImagePaletteComputer to find the dominant colors in `image` according to `parameters`.
+    /// - Parameters:
+    ///   - image: The image from which to extract colors
+    ///   - parameters: The settings for the computation method
+    init(image: ImageDataDescription, parameters: Parameters) throws(ImagePaletteComputationError)
+    
     /// Extract `amount` dominant colors.
     /// - Parameter amount: Number of colors to extract
     /// - Returns: A list of the dominant colors in the image.

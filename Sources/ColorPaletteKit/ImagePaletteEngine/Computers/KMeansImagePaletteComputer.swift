@@ -10,23 +10,55 @@ import Accelerate
 
 @available(macOS 13.0, iOS 16.0, *)
 final class KMeansImagePaletteComputer: ImagePaletteComputer {
-    private let cgImage: CGImage
-    private let imageFormat: vImage_CGImageFormat
-    
     private let width: Int
     private let height: Int
     private let size: Int
     
-    private let redBuffer: FloatingPlanarPixelBuffer
-    private let greenBuffer: FloatingPlanarPixelBuffer
-    private let blueBuffer: FloatingPlanarPixelBuffer
+    private var redBuffer: FloatingPlanarPixelBuffer
+    private var greenBuffer: FloatingPlanarPixelBuffer
+    private var blueBuffer: FloatingPlanarPixelBuffer
     
     private let centroidIndicesDescriptor: BNNSNDArrayDescriptor
     private var defaultParameters: ImagePaletteComputationMethod.KMeans = .init()
     
-    public init(cgImage: CGImage) throws(ImagePaletteComputationError) {
-        self.cgImage = cgImage
-        guard var imageFormat = vImage_CGImageFormat(
+    init(imageBuffer: vImage_Buffer, components: Int) {
+        self.width = Int(imageBuffer.width)
+        self.height = Int(imageBuffer.height)
+        self.size = width * height
+        self.redBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
+        self.greenBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
+        self.blueBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
+        
+        var imageBuffer = imageBuffer
+        
+        if components == 3 {
+            vImageConvert_RGBFFFtoPlanarF(
+                &imageBuffer,
+                &redBuffer.buffer,
+                &greenBuffer.buffer,
+                &blueBuffer.buffer,
+                vImage_Flags(kvImageNoFlags)
+            )
+        } else {
+            var alphaBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
+            vImageConvert_ARGBFFFFtoPlanarF(
+                &imageBuffer,
+                &redBuffer.buffer,
+                &greenBuffer.buffer,
+                &blueBuffer.buffer,
+                &alphaBuffer.buffer,
+                vImage_Flags(kvImageNoFlags)
+            )
+        }
+        
+        centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
+            scalarType: Int32.self,
+            shape: .matrixRowMajor(size, 1)
+        )
+    }
+    
+    convenience init(cgImage: CGImage) throws(ImagePaletteComputationError) {
+        guard let imageFormat = vImage_CGImageFormat(
             bitsPerComponent: 32,
             bitsPerPixel: 32 * 3,
             colorSpace: CGColorSpaceCreateDeviceRGB(),
@@ -36,40 +68,28 @@ final class KMeansImagePaletteComputer: ImagePaletteComputer {
                 CGImageAlphaInfo.none.rawValue)) else {
             throw .cannotMakeImageFormat
         }
-        self.width = cgImage.width
-        self.height = cgImage.height
-        self.size = width * height
-        self.redBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
-        self.greenBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
-        self.blueBuffer = FloatingPlanarPixelBuffer(width: width, height: height)
-
-        let rgbSources: [vImage.PixelBuffer<vImage.PlanarF>]
+        
         do {
-            let interleaved = try vImage.PixelBuffer<vImage.InterleavedFx3>(
+            let imageBuffer = try vImage_Buffer(
                 cgImage: cgImage,
-                cgImageFormat: &imageFormat
+                format: imageFormat
             )
-            rgbSources = interleaved.planarBuffers()
-            
-            rgbSources[0].scale(destination: redBuffer.buffer)
-            rgbSources[1].scale(destination: greenBuffer.buffer)
-            rgbSources[2].scale(destination: blueBuffer.buffer)
+            self.init(imageBuffer: imageBuffer, components: 3)
         } catch {
             throw .cannotExtractImageData
         }
-        self.imageFormat = imageFormat
-        
-        centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
-            scalarType: Int32.self,
-            shape: .matrixRowMajor(size, 1))
     }
     
-    public convenience init(cgImage: CGImage, parameters: ImagePaletteComputationMethod.KMeans) throws(ImagePaletteComputationError) {
+    convenience init(image: ImageDataDescription, parameters: ImagePaletteComputationMethod.KMeans = .init()) throws(ImagePaletteComputationError) {
+        self.init(imageBuffer: image.imageBuffer(), components: image.components)
+    }
+    
+    convenience init(cgImage: CGImage, parameters: ImagePaletteComputationMethod.KMeans = .init()) throws(ImagePaletteComputationError) {
         try self.init(cgImage: cgImage)
         self.defaultParameters = parameters
     }
     
-    public func dominantColors(amount: Int) -> [SIMD3<Float>] {
+    func dominantColors(amount: Int) -> [SIMD3<Float>] {
         dominantColors(
             amount: amount,
             maximumIterations: defaultParameters.maximumIterations,
@@ -77,7 +97,7 @@ final class KMeansImagePaletteComputer: ImagePaletteComputer {
         )
     }
     
-    public func dominantColors(
+    func dominantColors(
         amount: Int = 4,
         maximumIterations: Int = 50,
         tolerance: Int = 10

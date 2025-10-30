@@ -7,18 +7,18 @@
 
 import Accelerate
 
-@available(macOS 13.0, iOS 16.0, *)
 struct FloatingPlanarPixelBuffer: ~Copyable {
     let storage: UnsafeMutableBufferPointer<Float>
-    let buffer: vImage.PixelBuffer<vImage.PlanarF>
+    var buffer: vImage_Buffer
     
     init(width: Int, height: Int) {
         self.storage = UnsafeMutableBufferPointer<Float>.allocate(capacity: width * height)
-        self.buffer = vImage.PixelBuffer<vImage.PlanarF>(
+        self.buffer = vImage_Buffer(
             data: storage.baseAddress!,
-            width: width,
-            height: height,
-            byteCountPerRow: width * MemoryLayout<Float>.stride)
+            height: UInt(height),
+            width: UInt(width),
+            rowBytes: width * MemoryLayout<Float>.stride
+        )
     }
     
     deinit {

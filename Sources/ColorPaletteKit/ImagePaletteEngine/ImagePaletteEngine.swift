@@ -20,6 +20,14 @@ public final class ImagePaletteEngine {
         self.paletteComputer = try method.computer(cgImage: cgImage)
     }
     
+    /// Construct a new ImagePaletteComputer to find the dominant colors in `image` using `method`.
+    /// - Parameters:
+    ///   - image: The image from which to extract colors
+    ///   - method: The computation method
+    public init(image: ImageDataDescription, method: ImagePaletteComputationMethod) throws(ImagePaletteComputationError) {
+        self.paletteComputer = try method.computer(image: image)
+    }
+    
     /// Extract `amount` dominant colors.
     /// - Parameter amount: Number of colors to extract
     /// - Returns: A list of the dominant colors in the image.

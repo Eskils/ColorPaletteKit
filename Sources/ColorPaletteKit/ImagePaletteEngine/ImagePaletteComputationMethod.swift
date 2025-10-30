@@ -28,6 +28,15 @@ extension ImagePaletteComputationMethod {
             try EquallySpacedSamplesPaletteComputer(cgImage: cgImage, parameters: ())
         }
     }
+    
+    func computer(image: ImageDataDescription) throws(ImagePaletteComputationError) -> any ImagePaletteComputer {
+        switch self {
+        case .kMeans(let kMeans):
+            try KMeansImagePaletteComputer(image: image, parameters: kMeans)
+        case .equallySpacedSamples:
+            try EquallySpacedSamplesPaletteComputer(image: image, parameters: ())
+        }
+    }
 }
 
 @available(macOS 13.0, iOS 16.0, *)

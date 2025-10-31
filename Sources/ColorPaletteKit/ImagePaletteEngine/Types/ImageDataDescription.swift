@@ -13,7 +13,7 @@ public struct ImageDataDescription {
     public let height: Int
     public let components: Int
     
-    init(data: UnsafeMutablePointer<Float>, width: Int, height: Int, components: Int) {
+    public init(data: UnsafeMutablePointer<Float>, width: Int, height: Int, components: Int) {
         self.data = data
         self.width = width
         self.height = height

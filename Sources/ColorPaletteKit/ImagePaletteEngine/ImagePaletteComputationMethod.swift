@@ -9,7 +9,7 @@ import CoreGraphics
 
 /// Possible methods of extracting the dominant colors of an image.
 @available(macOS 11.0, iOS 14.0, *)
-public enum ImagePaletteComputationMethod {
+public enum ImagePaletteComputationMethod: Hashable {
     /// Use kMeans to find the dominant colors.
     /// More accurate, takes a significant time to compute.
     case kMeans(KMeans)
@@ -41,7 +41,7 @@ extension ImagePaletteComputationMethod {
 
 @available(macOS 11.0, iOS 14.0, *)
 extension ImagePaletteComputationMethod {
-    public struct KMeans {
+    public struct KMeans: Hashable {
         /// The maximum number of iterations before the computation gives its result.
         /// Reducing this number will decrease the maximum time to compute a result.
         /// Default is ``defaultMaximumIterations``.

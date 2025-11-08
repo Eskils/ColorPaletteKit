@@ -12,12 +12,20 @@ public struct ImageDataDescription {
     public let width: Int
     public let height: Int
     public let components: Int
+    public let isNormalized: Bool
     
-    public init(data: UnsafeMutablePointer<Float>, width: Int, height: Int, components: Int) {
+    public init(
+        data: UnsafeMutablePointer<Float>,
+        width: Int,
+        height: Int,
+        components: Int,
+        isNormalized: Bool = true
+    ) {
         self.data = data
         self.width = width
         self.height = height
         self.components = components
+        self.isNormalized = isNormalized
     }
 }
 

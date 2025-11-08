@@ -27,14 +27,14 @@ struct GridPaletteImageRenderer: PaletteImageRenderer {
                 for (i, color) in colors.enumerated() {
                     let cgColor = CGColor(red: CGFloat(color.x), green: CGFloat(color.y), blue: CGFloat(color.z), alpha: 1)
                     let column = CGFloat(i % columns)
-                    let row = CGFloat(i / columns)
+                    let row = CGFloat(rows - 1) - CGFloat(i / columns)
                     let isLastRow = Int(row) == rows - 1
                     let width = (isLastRow ? lastRowWidth : columnWidth)
                     let rect = CGRect(x: column * width, y: row * rowHeight, width: width, height: rowHeight)
                     cgContext.addPath(CGPath(rect: rect, transform: nil))
                     cgContext.setFillColor(cgColor)
                     cgContext.setStrokeColor(cgColor)
-                    cgContext.drawPath(using: .fillStroke)
+                    cgContext.drawPath(using: .fill)
                 }
             }
         } catch {

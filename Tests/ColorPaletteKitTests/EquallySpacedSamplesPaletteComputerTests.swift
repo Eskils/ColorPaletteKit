@@ -50,7 +50,7 @@ struct EquallySpacedSamplesPaletteComputerTests {
             height: leaf.height,
             components: leaf.bytesPerRow / leaf.width
         )
-        let imagePaletteDescription = try EquallySpacedSamplesPaletteComputer(image: imageData, parameters: ())
+        let imagePaletteDescription = try EquallySpacedSamplesPaletteComputer(image: imageData, parameters: EquallySpacedSamples())
         let colors = imagePaletteDescription.dominantColors(amount: 4)
         
         #expect(
